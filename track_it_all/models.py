@@ -9,3 +9,10 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
     date = db.Column(db.DateTime(timezone=True), default=func.now())
+    bugs = db.relationship('Bug')
+
+class Bug(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String(150))
+    date = db.Column(db.DateTime(timezone=True), default=func.now())
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
