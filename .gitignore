@@ -4,8 +4,12 @@
 *.pyc
 __pycache__
 
-# Environments #
+# Environments 
 .env
 .venv
 env/
 venv/
+
+# database
+*.db
+instance/
