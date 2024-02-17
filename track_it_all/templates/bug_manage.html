@@ -4,31 +4,30 @@
 
 {% block content %}
 
-<h1 align="center">Bugs</h1>
+<h1>Bugs</h1>
 
-<ul class="list-group list-group-flush" id="bugs">
+<ul class="list-group list-group-flush">
     {% for bug in user.bugs %}
-        <li class="list-group-item">
-            {{ bug.text }}
-        </li>
+        <li class="list-group-item">{{ bug.text }}</li>
     {% endfor %}
 </ul>
 
-<button id="add-bug-btn" type="button" class="btn btn-primary">Add New Bug</button>
+<button id="add-bug-btn">Add New Bug</button>
 
 <div id="new-bug-form" style="display: none;">
     <form method="POST">
-        <textarea name="bug" id="bug" class="form-control"></textarea>
+        <textarea name="bug" id="bug"></textarea>
         <br />
-        <div align="center">
-            <button type="submit" class="btn btn-primary">Submit Bug</button>
-        </div>
+        <button type="submit">Submit Bug</button>
     </form>
 </div>
 
 <script>
+    // Attach event listener to "Add New Bug" button
     document.getElementById("add-bug-btn").addEventListener("click", function() {
-        document.getElementById("new-bug-form").style.display = "block";
+        // Toggle the visibility of the form
+        const newBugForm = document.getElementById("new-bug-form");
+        newBugForm.style.display = newBugForm.style.display === "none" ? "block" : "none";
     });
 </script>
 
