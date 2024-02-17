@@ -6,9 +6,13 @@ from .database import db
 
 views = Blueprint('views', __name__)
 
-@views.route('/', methods=['GET', 'POST'])
-@login_required
+@views.route('/')
 def home():
+    return render_template('home.html', user=current_user)
+
+@views.route('/bug-manage', methods=['GET', 'POST'])
+@login_required
+def bug_manage():
     if request.method == 'POST':
         bug = request.form.get('bug')
 
@@ -21,4 +25,4 @@ def home():
             flash('Bug added!', category='success')
         
 
-    return render_template('home.html', user=current_user)
+    return render_template('bug_manage.html', user=current_user)
