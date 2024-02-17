@@ -1,28 +1,63 @@
-{% extends "base.html" %} {% block title %}Login{% endblock %} {% block content
-    %}
-    <form method="POST">
-      <h3 align="center">Login</h3>
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input
-          type="email"
-          class="form-control"
-          id="email"
-          name="email"
-          placeholder="Enter email"
-        />
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+<div class="content-section">
+  <form method="POST" action="">
+    {{ form.hidden_tag() }}
+
+    <fieldset>
+      <legend>Log In</legend>
+
+      <div>
+        {{ form.email.label }}
+        {% if form.email.errors %}
+          {{ form.email(class="is-invalid") }}
+          <div class="invalid-feedback">
+            {% for error in form.email.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% else %}
+          {{ form.email }}
+        {% endif %}
       </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          class="form-control"
-          id="password"
-          name="password"
-          placeholder="Enter password"
-        />
+
+      <div>
+        {{ form.password.label }}
+        {% if form.password.errors %}
+          {{ form.password(class="is-invalid") }}
+          <div class="invalid-feedback">
+            {% for error in form.password.errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% else %}
+          {{ form.password }}
+        {% endif %}
       </div>
-      <br />
-      <button type="submit" class="btn btn-primary">Login</button>
-    </form>
-    {% endblock %}
+
+      <div class="form-check">
+        {{ form.remember }}
+        {{ form.remember.label }}
+      </div>
+
+    </fieldset>
+
+    <div>
+      {{ form.submit }}
+    </div>
+    <small class="text-muted ml-2">
+      <a href="#">Forgot Password?</a>
+
+    </small>
+  </form>
+
+  <div>
+    Need An Account? <a href="{{ url_for('auth.register') }}">Sign Up</a>
+  </div>
+</div>
+
+{% endblock %}
