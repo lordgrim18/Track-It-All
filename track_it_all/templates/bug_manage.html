@@ -1,20 +1,34 @@
-{% extends "base.html" %} 
-{% block title %}Manage{% endblock %} 
-{% block content%}
-<h1 align="center">Bugs</h1>
-<ul class="list-group list-group-flush" id="bugs">
-  {% for bug in user.bugs %}
-  <li class="list-group-item">
-    {{ bug.text }}
-    </button>
-  </li>
-  {% endfor %}
+{% extends "base.html" %}
+
+{% block title %}Manage{% endblock %}
+
+{% block content %}
+
+<h1>Bugs</h1>
+
+<ul class="list-group list-group-flush">
+    {% for bug in user.bugs %}
+        <li class="list-group-item">{{ bug.text }}</li>
+    {% endfor %}
 </ul>
-<form method="POST">
-  <textarea name="bug" id="bug" class="form-control"></textarea>
-  <br />
-  <div align="center">
-    <button type="submit" class="btn btn-primary">Add bug</button>
-  </div>
-</form>
+
+<button id="add-bug-btn">Add New Bug</button>
+
+<div id="new-bug-form" style="display: none;">
+    <form method="POST">
+        <textarea name="bug" id="bug"></textarea>
+        <br />
+        <button type="submit">Submit Bug</button>
+    </form>
+</div>
+
+<script>
+    // Attach event listener to "Add New Bug" button
+    document.getElementById("add-bug-btn").addEventListener("click", function() {
+        // Toggle the visibility of the form
+        const newBugForm = document.getElementById("new-bug-form");
+        newBugForm.style.display = newBugForm.style.display === "none" ? "block" : "none";
+    });
+</script>
+
 {% endblock %}
