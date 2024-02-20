@@ -34,17 +34,13 @@ def register():
         email = form.email.data
         first_name = form.first_name.data
         password = form.password1.data
-
-        user = User.query.filter_by(email=email).first()
-        if user:
-            flash('Email already exists.', category='error')
-        else:
-            new_user = User(email=email, first_name=first_name, password=generate_password_hash(password))
-            db.session.add(new_user)
-            db.session.commit()
-            login_user(new_user, remember=True)
-            flash('Account created!', category='success')
-            return redirect(url_for('views.home'))
+        
+        new_user = User(email=email, first_name=first_name, password=generate_password_hash(password))
+        db.session.add(new_user)
+        db.session.commit()
+        login_user(new_user, remember=True)
+        flash('Account created!', category='success')
+        return redirect(url_for('views.home'))
     return render_template('sign_up.html', user=current_user, form=form)
 
 @auth.route('/logout')
