@@ -52,3 +52,8 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
+
+@auth.route('/account')
+@login_required
+def account():
+    return render_template('account.html', user=current_user)
