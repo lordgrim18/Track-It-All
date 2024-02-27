@@ -4,7 +4,7 @@
 <h1>This is the Home page</h1>
 {% if user.is_authenticated %}
   <h1>Welcome, {{ user.username }}</h1>
-  <a href="/bug-manage">Manage Bugs</a>
+  <a href="/add-bug">Add Bugs</a>
 {% else %}
   <h1>Welcome, Guest</h1>
     <a href="/login">Login</a>
