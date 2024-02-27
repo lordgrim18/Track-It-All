@@ -4,8 +4,14 @@
 
 {% block content %}
 
-<h1>
-    {{ user.first_name }}
-</h1>
+<div class="content-section">
+  <div class="media">
+    <img class="" src="{{ image_file }}">
+    <div class="media-body">
+      <h2>{{ user.first_name }}</h2>
+      <p>{{ current_user.email }}</p>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

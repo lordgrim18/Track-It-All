@@ -26,3 +26,9 @@ def bug_manage():
         
 
     return render_template('bug_manage.html', user=current_user)
+
+@views.route('/account')
+@login_required
+def account():
+    image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
+    return render_template('account.html', user=current_user, image_file=image_file)
