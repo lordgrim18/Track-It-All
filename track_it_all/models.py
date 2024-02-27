@@ -9,6 +9,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150), nullable=False)
     first_name = db.Column(db.String(150), nullable=False)
     date = db.Column(db.DateTime(timezone=True), default=func.now(), nullable=False)
+    image_file = db.Column(db.String(60), nullable=False, default='default.jpg')
     bugs = db.relationship('Bug', backref='bug_finder', lazy=True)
 
     def __repr__(self):
