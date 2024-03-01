@@ -10,7 +10,8 @@ views = Blueprint('views', __name__)
 
 @views.route('/')
 def home():
-    return render_template('home.html', user=current_user)
+    bugs = Bug.query.all()
+    return render_template('home.html', user=current_user, bugs=bugs)
 
 @views.route('/account', methods=['GET', 'POST'])
 @login_required
@@ -36,7 +37,7 @@ def account():
 def add_bug():
     form = BugForm()
     if form.validate_on_submit():
-        bug = Bug(title=form.title.data, desc=form.desc.data, user_id=current_user.id)
+        bug = Bug(title=form.title.data, desc=form.desc.data, bug_adder=current_user)
         db.session.add(bug)
         db.session.commit()
         flash('Bug added!', category='success')
