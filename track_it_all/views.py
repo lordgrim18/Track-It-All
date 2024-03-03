@@ -43,3 +43,9 @@ def add_bug():
         flash('Bug added!', category='success')
         return redirect(url_for('views.home'))
     return render_template('add_bug.html', user=current_user, form=form)
+
+@views.route('bug/get/<string:bug_id>')
+@login_required
+def get_bug(bug_id):
+    bug = Bug.query.get_or_404(bug_id)
+    return render_template('bug.html', user=current_user, bug=bug)
