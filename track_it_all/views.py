@@ -68,3 +68,14 @@ def update_bug(bug_id):
         form.desc.data = bug.desc
         form.submit.label.text = 'Update'
     return render_template('add_bug.html', user=current_user, form=form, legend='Update Bug')
+
+@views.route('bug/delete/<string:bug_id>', methods=['GET','POST'])
+@login_required
+def delete_bug(bug_id):
+    bug = Bug.query.get_or_404(bug_id)
+    if bug.bug_adder != current_user:
+        abort(403)
+    db.session.delete(bug)
+    db.session.commit()
+    flash('Bug deleted!', category='success')
+    return redirect(url_for('views.home'))
