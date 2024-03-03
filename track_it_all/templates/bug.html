@@ -1,13 +1,13 @@
 {% extends "base.html" %} 
-{% block title %}Home{% endblock %} 
+{% block title %}Bug Description{% endblock %} 
 {% block content%}
-<h1>This is the Home page</h1>
+<h1>This is the Bug Description page</h1>
 {% if user.is_authenticated %}
   <article>
     <img src="{{ url_for('static', filename='profile_pics/' + bug.bug_adder.image_file) }}">
     <div>
       <div>
-        <a href="#">{{ bug.bug_adder.first_name }}</a>
+        <a href="{{ url_for('views.user_bugs', first_name=bug.bug_adder.first_name) }}">{{ bug.bug_adder.first_name }}</a>
         <small>{{ bug.date.strftime( '%Y-%m-%d' ) }}</small>
         {% if bug.bug_adder == user %}
           <div>

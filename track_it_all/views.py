@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, flash, url_for, redirect,
 from flask_login import login_required, current_user
 
 from .forms import UpdateAccountForm, BugForm
-from .models import Bug
+from .models import Bug, User
 from .database import db
 from .utils import save_picture
 
@@ -80,3 +80,11 @@ def delete_bug(bug_id):
     db.session.commit()
     flash('Bug deleted!', category='success')
     return redirect(url_for('views.home'))
+
+@views.route('/user/<string:first_name>')
+@login_required
+def user_bugs(first_name):
+    page = request.args.get('page', 1, type=int)
+    user = User.query.filter_by(first_name=first_name).first_or_404()
+    bugs = Bug.query.filter_by(bug_adder=user).order_by(Bug.date.desc()).paginate(page=page, per_page=5)
+    return render_template('user_bugs.html', user=user, bugs=bugs)
