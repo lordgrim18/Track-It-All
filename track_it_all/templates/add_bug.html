@@ -9,7 +9,7 @@
       {{ form.hidden_tag() }}
   
       <fieldset>
-        <legend>New Bug</legend>
+        <legend>{{ legend }}</legend>
         <div>
           {{ form.title.label }}
           {% if form.title.errors %}
@@ -38,19 +38,6 @@
           {% endif %}
         </div>
 
-        <div>
-            {{ form.date.label }}
-            {% if form.date.errors %}
-              {{ form.date(class="is-invalid") }}
-              <div class="invalid-feedback">
-                {% for error in form.date.errors %}
-                  <span>{{ error }}</span>
-                {% endfor %}
-              </div>
-            {% else %}
-              {{ form.date }}
-            {% endif %}
-          </div>
       </fieldset>
       <div>
         {{ form.submit }}

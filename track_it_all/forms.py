@@ -42,6 +42,6 @@ class UpdateAccountForm(FlaskForm):
 class BugForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     desc = TextAreaField('Content', validators=[DataRequired()])
-    date = StringField('Date', validators=[DataRequired()])
+    # date = StringField('Date', validators=[DataRequired()])
 
     submit = SubmitField('Add')
