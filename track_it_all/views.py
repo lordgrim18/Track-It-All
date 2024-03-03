@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, url_for, redirect
+from flask import Blueprint, render_template, request, flash, url_for, redirect, abort
 from flask_login import login_required, current_user
 
 from .forms import UpdateAccountForm, BugForm
@@ -42,10 +42,29 @@ def add_bug():
         db.session.commit()
         flash('Bug added!', category='success')
         return redirect(url_for('views.home'))
-    return render_template('add_bug.html', user=current_user, form=form)
+    return render_template('add_bug.html', user=current_user, form=form, legend='Add Bug')
 
 @views.route('bug/get/<string:bug_id>')
 @login_required
 def get_bug(bug_id):
     bug = Bug.query.get_or_404(bug_id)
     return render_template('bug.html', user=current_user, bug=bug)
+
+@views.route('bug/update/<string:bug_id>', methods=['GET', 'POST'])
+@login_required
+def update_bug(bug_id):
+    bug = Bug.query.get_or_404(bug_id)
+    if bug.bug_adder != current_user:
+        abort(403)
+    form = BugForm()
+    if form.validate_on_submit():
+        bug.title = form.title.data
+        bug.desc = form.desc.data
+        db.session.commit()
+        flash('Bug updated!', category='success')
+        return redirect(url_for('views.get_bug', bug_id=bug.id))
+    elif request.method == 'GET':
+        form.title.data = bug.title
+        form.desc.data = bug.desc
+        form.submit.label.text = 'Update'
+    return render_template('add_bug.html', user=current_user, form=form, legend='Update Bug')
