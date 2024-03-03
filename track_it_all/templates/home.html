@@ -5,7 +5,7 @@
 {% if user.is_authenticated %}
   <h1>Welcome, {{ user.username }}</h1>
   <a href="/add-bug">Add Bugs</a>
-  {% for bug in bugs %}
+  {% for bug in bugs.items %}
     <article>
       <img src="{{ url_for('static', filename='profile_pics/' + bug.bug_adder.image_file) }}">
       <div>
@@ -18,6 +18,23 @@
       </div>
     </article>
   {% endfor %}
+  {% for page_num in bugs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
+    {% if page_num %}
+      {% if bugs.page == page_num %}
+        <a href="{{ url_for('views.home', page=page_num) }}"><b>{{ page_num }}</b></a>
+      {% else %}
+        <a href="{{ url_for('views.home', page=page_num) }}">{{ page_num }}</a>
+      {% endif %}
+    {% else %}
+      ...
+    {% endif %}
+  {% endfor %}
+  {% if bugs.has_next %}
+    <a href="{{ url_for('views.home', page=bugs.next_num) }}">Next</a>
+  {% endif %}
+  {% if bugs.has_prev %}
+    <a href="{{ url_for('views.home', page=bugs.prev_num) }}">Prev</a>
+  {% endif %}
 {% else %}
   <h1>Welcome, Guest</h1>
     <a href="/login">Login</a>

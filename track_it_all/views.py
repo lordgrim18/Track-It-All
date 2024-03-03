@@ -10,7 +10,8 @@ views = Blueprint('views', __name__)
 
 @views.route('/')
 def home():
-    bugs = Bug.query.all()
+    page = request.args.get('page', 1, type=int)
+    bugs = Bug.query.order_by(Bug.date.desc()).paginate(page=page, per_page=5)
     return render_template('home.html', user=current_user, bugs=bugs)
 
 @views.route('/account', methods=['GET', 'POST'])
