@@ -1,15 +1,18 @@
 {% extends "base.html" %} 
 {% block title %}Home{% endblock %} 
 {% block content%}
+<h1>This is the Home page</h1>
 {% if user.is_authenticated %}
   <article>
     <img src="{{ url_for('static', filename='profile_pics/' + bug.bug_adder.image_file) }}">
-    <h2>{{ bug.title }}</h2>
-    <p>{{ bug.desc }}</p>
-    <p>{{ bug.date.strftime('%Y-%m-%d') }}</p>
-    <small>
-{{ bug.bug_adder.first_name }}
-    </small>
+    <div>
+      <div>
+        <a href="#">{{ bug.bug_adder.first_name }}</a>
+        <small>{{ bug.date.strftime( '%Y-%m-%d' ) }}</small>
+      </div>
+      <h2>{{ bug.title }}</h2>
+      <p>{{ bug.desc }}</p>
+    </div>
   </article>
 {% else %}
   <h1>Welcome, Guest</h1>
