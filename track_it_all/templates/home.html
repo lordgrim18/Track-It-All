@@ -5,15 +5,30 @@
 {% if user.is_authenticated %}
   <h1>Welcome, {{ user.username }}</h1>
   <a href="/add-bug">Add Bugs</a>
+  {% for post in posts %}
+        <article class="media content-section">
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ post.author.username }}</a>
+              <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <h2><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2>
+            <p class="article-content">{{ post.content }}</p>
+          </div>
+        </article>
+    {% endfor %}
   {% for bug in bugs %}
   <article>
     <img src="{{ url_for('static', filename='profile_pics/' + bug.bug_adder.image_file) }}">
-    <h2>{{ bug.title }}</h2>
-    <p>{{ bug.desc }}</p>
-    <p>{{ bug.date.strftime('%Y-%m-%d') }}</p>
-    <small>
-      <a href="#">{{ bug.bug_adder.first_name }}</a>
-    </small>
+    <div>
+      <div>
+        <a href="#">{{ bug.bug_adder.first_name }}</a>
+        <small>{{ bug.date.strftime( '%Y-%m-%d' ) }}</small>
+      </div>
+      <h2><a href="{{ url_for('views.get_bug', bug_id=bug.id) }}">{{ bug.title }}</a></h2>
+      <p>{{ bug.desc }}</p>
+    </div>
   </article>
     {% endfor %}
 {% else %}
