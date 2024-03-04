@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Manage{% endblock %}
+
+{% block content %}
+
+<div class="content-section">
+    <form method="POST" action="">
+      {{ form.hidden_tag() }}
+  
+      <fieldset>
+        <legend>{{ legend }}</legend>
+        <div>
+          {{ form.title.label }}
+          {% if form.title.errors %}
+            {{ form.title(class="is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.title.errors %}
+                <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% else %}
+            {{ form.title }}
+          {% endif %}
+        </div>
+  
+        <div>
+          {{ form.desc.label }}
+          {% if form.desc.errors %}
+            {{ form.desc(class="is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.desc.errors %}
+                <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% else %}
+            {{ form.desc }}
+          {% endif %}
+        </div>
+
+      </fieldset>
+      <div>
+        {{ form.submit }}
+      </div>
+    </form>
+  </div>
+
+{% endblock %}
