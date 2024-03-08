@@ -4,7 +4,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 
 from .database import db
 from .models import User
-from .forms import RegistrationForm, LoginForm
+from .forms import RegistrationForm, LoginForm, RequestResetForm, ResetPasswordForm
 
 auth = Blueprint('auth', __name__)
 
@@ -53,3 +53,17 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
+
+@auth.route('/reset-password', methods=['GET', 'POST'])
+def reset_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('views.home'))
+    form = RequestResetForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            flash('An email has been sent with instructions to reset your password.', category='info')
+            return redirect(url_for('auth.login'))
+        else:
+            flash('Email does not exist.', category='error')
+    return render_template('reset_request.html', user=current_user, form=form)
