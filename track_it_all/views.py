@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, request, flash, url_for, redirect, abort
 from flask_login import login_required, current_user
 
-from .forms import UpdateAccountForm, BugForm
-from .models import Bug, User
-from .database import db
-from .utils import save_picture
+from track_it_all.forms import UpdateAccountForm, BugForm
+from track_it_all.models import Bug, User
+from track_it_all.database import db
+from track_it_all.utils import save_picture
 
 views = Blueprint('views', __name__)
 
