@@ -2,9 +2,10 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 
-from .database import db
-from .models import User
-from .forms import RegistrationForm, LoginForm, RequestResetForm, ResetPasswordForm
+from track_it_all.database import db
+from track_it_all.models import User
+from track_it_all.forms import RegistrationForm, LoginForm, RequestResetForm, ResetPasswordForm
+from track_it_all.utils import send_reset_email
 
 auth = Blueprint('auth', __name__)
 
@@ -62,6 +63,7 @@ def reset_request():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
+            send_reset_email(user)
             flash('An email has been sent with instructions to reset your password.', category='info')
             return redirect(url_for('auth.login'))
         else:

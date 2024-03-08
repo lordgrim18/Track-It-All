@@ -3,10 +3,10 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_mail import Mail
 
-from .database import db
-from .views import views
-from .auth import auth
-from .models import User
+from track_it_all.database import db
+from track_it_all.views import views
+from track_it_all.auth import auth
+from track_it_all.models import User
 
 DB_NAME = config('DB_NAME')
 
@@ -38,4 +38,3 @@ def create_app():
         return User.query.get(int(id))
 
     return app
-
