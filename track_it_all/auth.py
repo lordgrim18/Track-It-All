@@ -67,3 +67,19 @@ def reset_request():
         else:
             flash('Email does not exist.', category='error')
     return render_template('reset_request.html', user=current_user, form=form)
+
+@auth.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_token(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('views.home'))
+    user = User.verify_reset_token(token)
+    if user is None:
+        flash('That is an invalid or expired token', category='warning')
+        return redirect(url_for('auth.reset_request'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.password = generate_password_hash(form.password1.data)
+        db.session.commit()
+        flash('Your password has been updated!', category='success')
+        return redirect(url_for('auth.login'))
+    return render_template('reset_token.html', user=current_user, form=form)
