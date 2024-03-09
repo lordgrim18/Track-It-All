@@ -1,40 +1,39 @@
 from decouple import config
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+# from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
 
-from track_it_all.database import db
-from track_it_all.views import views
-from track_it_all.auth import auth
-from track_it_all.models import User
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = config('SECRET_KEY')
 
 DB_NAME = config('DB_NAME')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}'.format(DB_NAME)
+db = SQLAlchemy(app)
+with app.app_context():
+    db.create_all()
 
-def create_app():
-    app = Flask(__name__)
-    app.config['SECRET_KEY'] = config('SECRET_KEY')
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+# bcrypt = Bcrypt(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+login_manager.login_message_category = 'info'
 
-    app.register_blueprint(views, url_prefix='/')
-    app.register_blueprint(auth, url_prefix='/')
+app.config['MAIL_SERVER'] = config('EMAIL_HOST')
+app.config['MAIL_PORT'] = config('EMAIL_PORT')
+app.config['MAIL_USE_TLS'] = config('EMAIL_USE_TLS')
+app.config['MAIL_USERNAME'] = config('EMAIL_HOST_USER')
+app.config['MAIL_PASSWORD'] = config('EMAIL_HOST_PASSWORD')
+mail = Mail(app)
 
-    db.init_app(app)
-    with app.app_context():
-        db.create_all()
+from track_it_all.views import views
+from track_it_all.auth import auth
 
-    login_manager = LoginManager()
-    login_manager.login_view = 'auth.login'
-    login_manager.init_app(app)
+app.register_blueprint(views, url_prefix='/')
+app.register_blueprint(auth, url_prefix='/')
 
-    app.config['MAIL_SERVER'] = config('EMAIL_HOST')
-    app.config['MAIL_PORT'] = config('EMAIL_PORT')
-    app.config['MAIL_USE_TLS'] = config('EMAIL_USE_TLS')
-    app.config['MAIL_USERNAME'] = config('EMAIL_HOST_USER')
-    app.config['MAIL_PASSWORD'] = config('EMAIL_HOST_PASSWORD')
-    mail = Mail(app)
-
-    @login_manager.user_loader
-    def load_user(id):
-        return User.query.get(int(id))
-
-    return app
+from track_it_all.models import User
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(int(id))
