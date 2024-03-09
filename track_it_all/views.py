@@ -3,15 +3,18 @@ from flask_login import login_required, current_user
 
 from track_it_all.forms import UpdateAccountForm, BugForm
 from track_it_all.models import Bug, User
-from track_it_all.database import db
 from track_it_all.utils import save_picture
+from track_it_all import db
 
 views = Blueprint('views', __name__)
 
 @views.route('/')
 def home():
     page = request.args.get('page', 1, type=int)
-    bugs = Bug.query.order_by(Bug.date.desc()).paginate(page=page, per_page=5)
+    if current_user.is_authenticated:
+        bugs = Bug.query.order_by(Bug.date.desc()).paginate(page=page, per_page=5)
+    else:
+        bugs = None
     return render_template('home.html', user=current_user, bugs=bugs)
 
 @views.route('/account', methods=['GET', 'POST'])
