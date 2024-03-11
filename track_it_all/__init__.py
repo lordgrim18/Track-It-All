@@ -5,35 +5,40 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
 
+from track_it_all.configurations import Configurations
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = config('SECRET_KEY')
-
-DB_NAME = config('DB_NAME')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}'.format(DB_NAME)
-db = SQLAlchemy(app)
-with app.app_context():
-    db.create_all()
-
-# bcrypt = Bcrypt(app)
-login_manager = LoginManager(app)
-login_manager.login_view = 'login'
+db = SQLAlchemy()
+# bcrypt = Bcrypt()
+login_manager = LoginManager()
+login_manager.login_view = 'users.login'
 login_manager.login_message_category = 'info'
+mail = Mail()
 
-app.config['MAIL_SERVER'] = config('EMAIL_HOST')
-app.config['MAIL_PORT'] = config('EMAIL_PORT')
-app.config['MAIL_USE_TLS'] = config('EMAIL_USE_TLS')
-app.config['MAIL_USERNAME'] = config('EMAIL_HOST_USER')
-app.config['MAIL_PASSWORD'] = config('EMAIL_HOST_PASSWORD')
-mail = Mail(app)
 
-from track_it_all.views import views
-from track_it_all.auth import auth
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Configurations)
 
-app.register_blueprint(views, url_prefix='/')
-app.register_blueprint(auth, url_prefix='/')
+    db.init_app(app)
+    with app.app_context():
+        db.create_all()
 
-from track_it_all.models import User
-@login_manager.user_loader
-def load_user(id):
-    return User.query.get(int(id))
+    # bcrypt.init_app(app)
+    login_manager.init_app(app)
+    mail.init_app(app)
+
+    from track_it_all.main.routes import main
+    from track_it_all.users.routes import users
+    from track_it_all.bugs.routes import bugs
+
+    app.register_blueprint(main, url_prefix='/')
+    app.register_blueprint(users, url_prefix='/')
+    app.register_blueprint(bugs, url_prefix='/')
+
+    from track_it_all.models import User
+
+    @login_manager.user_loader
+    def load_user(id):
+        return User.query.get(int(id))
+
+    return app
