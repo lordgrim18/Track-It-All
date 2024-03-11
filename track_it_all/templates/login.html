@@ -50,13 +50,13 @@
       {{ form.submit }}
     </div>
     <small class="text-muted ml-2">
-      <a href="{{ url_for('auth.reset_request') }}">Forgot Password?</a>
+      <a href="{{ url_for('users.reset_request') }}">Forgot Password?</a>
 
     </small>
   </form>
 
   <div>
-    Need An Account? <a href="{{ url_for('auth.register') }}">Sign Up</a>
+    Need An Account? <a href="{{ url_for('users.register') }}">Sign Up</a>
   </div>
 </div>
 

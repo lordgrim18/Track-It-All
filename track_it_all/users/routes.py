@@ -22,7 +22,7 @@ def account():
         current_user.first_name = form.first_name.data
         db.session.commit()
         flash('Account updated!', category='success')
-        return redirect(url_for('views.account'))
+        return redirect(url_for('users.account'))
     elif request.method == 'GET':
         form.email.data = current_user.email
         form.first_name.data = current_user.first_name
@@ -32,7 +32,7 @@ def account():
 @users.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('views.home'))
+        return redirect(url_for('main.home'))
     form = LoginForm()
     if form.validate_on_submit():
         email = form.email.data
@@ -44,7 +44,7 @@ def login():
                 flash('Logged in successfully!', category='success')
                 login_user(user, remember=form.remember.data)
                 next_page = request.args.get('next')
-                return redirect(next_page) if next_page else redirect(url_for('views.home'))
+                return redirect(next_page) if next_page else redirect(url_for('main.home'))
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
@@ -54,7 +54,7 @@ def login():
 @users.route('/sign-up', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('views.home'))
+        return redirect(url_for('main.home'))
     form = RegistrationForm()
     if form.validate_on_submit():
         email = form.email.data
@@ -66,7 +66,7 @@ def register():
         db.session.commit()
         login_user(new_user, remember=True)
         flash('Account created!', category='success')
-        return redirect(url_for('views.home'))
+        return redirect(url_for('main.home'))
     return render_template('sign_up.html', user=current_user, form=form)
 
 @users.route('/logout')
@@ -78,7 +78,7 @@ def logout():
 @users.route('/reset-password', methods=['GET', 'POST'])
 def reset_request():
     if current_user.is_authenticated:
-        return redirect(url_for('views.home'))
+        return redirect(url_for('main.home'))
     form = RequestResetForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -93,7 +93,7 @@ def reset_request():
 @users.route('/reset-password/<token>', methods=['GET', 'POST'])
 def reset_token(token):
     if current_user.is_authenticated:
-        return redirect(url_for('views.home'))
+        return redirect(url_for('main.home'))
     user = User.verify_reset_token(token)
     if user is None:
         flash('That is an invalid or expired token', category='warning')
