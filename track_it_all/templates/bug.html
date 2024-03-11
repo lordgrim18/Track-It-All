@@ -7,12 +7,12 @@
     <img src="{{ url_for('static', filename='profile_pics/' + bug.bug_adder.image_file) }}">
     <div>
       <div>
-        <a href="{{ url_for('views.user_bugs', first_name=bug.bug_adder.first_name) }}">{{ bug.bug_adder.first_name }}</a>
+        <a href="{{ url_for('bugs.user_bugs', first_name=bug.bug_adder.first_name) }}">{{ bug.bug_adder.first_name }}</a>
         <small>{{ bug.date.strftime( '%Y-%m-%d' ) }}</small>
         {% if bug.bug_adder == user %}
           <div>
-            <a href="{{ url_for('views.update_bug', bug_id=bug.id) }}">Edit</a>
-            <a href="{{ url_for('views.delete_bug', bug_id=bug.id) }}">Delete</a>
+            <a href="{{ url_for('bugs.update_bug', bug_id=bug.id) }}">Edit</a>
+            <a href="{{ url_for('bugs.delete_bug', bug_id=bug.id) }}">Delete</a>
           </div>
         {% endif %}
       </div>

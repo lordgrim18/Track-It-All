@@ -12,7 +12,7 @@
         <div>
           <small>{{ bug.date.strftime( '%Y-%m-%d' ) }}</small>
         </div>
-        <h2><a href="{{ url_for('views.get_bug', bug_id=bug.id) }}">{{ bug.title }}</a></h2>
+        <h2><a href="{{ url_for('bugs.get_bug', bug_id=bug.id) }}">{{ bug.title }}</a></h2>
         <p>{{ bug.desc }}</p>
       </div>
     </article>
@@ -20,19 +20,19 @@
   {% for page_num in bugs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
     {% if page_num %}
       {% if bugs.page == page_num %}
-        <a href="{{ url_for('views.user_bugs', first_name=user.first_name, page=page_num) }}"><b>{{ page_num }}</b></a>
+        <a href="{{ url_for('bugs.user_bugs', first_name=user.first_name, page=page_num) }}"><b>{{ page_num }}</b></a>
       {% else %}
-        <a href="{{ url_for('views.user_bugs', first_name=user.first_name, page=page_num) }}">{{ page_num }}</a>
+        <a href="{{ url_for('bugs.user_bugs', first_name=user.first_name, page=page_num) }}">{{ page_num }}</a>
       {% endif %}
     {% else %}
       ...
     {% endif %}
   {% endfor %}
   {% if bugs.has_next %}
-    <a href="{{ url_for('views.user_bugs', first_name=user.first_name, page=bugs.next_num) }}">Next</a>
+    <a href="{{ url_for('bugs.user_bugs', first_name=user.first_name, page=bugs.next_num) }}">Next</a>
   {% endif %}
   {% if bugs.has_prev %}
-    <a href="{{ url_for('views.user_bugs', first_name=user.first_name, page=bugs.prev_num) }}">Prev</a>
+    <a href="{{ url_for('bugs.user_bugs', first_name=user.first_name, page=bugs.prev_num) }}">Prev</a>
   {% endif %}
 {% else %}
   <h1>Welcome, Guest</h1>
