@@ -30,10 +30,12 @@ def create_app():
     from track_it_all.main.routes import main
     from track_it_all.users.routes import users
     from track_it_all.bugs.routes import bugs
+    from track_it_all.errors.handlers import errors
 
     app.register_blueprint(main, url_prefix='/')
     app.register_blueprint(users, url_prefix='/')
     app.register_blueprint(bugs, url_prefix='/')
+    app.register_blueprint(errors)
 
     from track_it_all.models import User
 
