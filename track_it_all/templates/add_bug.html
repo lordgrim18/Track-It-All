@@ -3,46 +3,43 @@
 {% block title %}Manage{% endblock %}
 
 {% block content %}
-
 <div class="content-section">
     <form method="POST" action="">
       {{ form.hidden_tag() }}
   
-      <fieldset>
-        <legend>{{ legend }}</legend>
-        <div>
-          {{ form.title.label }}
+      <fieldset class="form-group">
+        <legend class="border-bottom mb-4">{{ legend }}</legend>
+        <div class="form-group">
+          {{ form.title.label(class="form-control-label") }}
           {% if form.title.errors %}
-            {{ form.title(class="is-invalid") }}
+            {{ form.title(class="form-control form-control-lg is-invalid") }}
             <div class="invalid-feedback">
               {% for error in form.title.errors %}
                 <span>{{ error }}</span>
               {% endfor %}
             </div>
           {% else %}
-            {{ form.title }}
+            {{ form.title(class="form-control form-control-lg") }}
           {% endif %}
         </div>
-  
-        <div>
-          {{ form.desc.label }}
+        <div class="form-group">
+          {{ form.desc.label(class="form-control-label") }}
           {% if form.desc.errors %}
-            {{ form.desc(class="is-invalid") }}
+            {{ form.desc(class="form-control form-control-lg is-invalid") }}
             <div class="invalid-feedback">
               {% for error in form.desc.errors %}
                 <span>{{ error }}</span>
               {% endfor %}
             </div>
           {% else %}
-            {{ form.desc }}
+            {{ form.desc(class="form-control form-control-lg") }}
           {% endif %}
         </div>
-
       </fieldset>
-      <div>
-        {{ form.submit }}
+      <div class="form-group">
+        {{ form.submit(class="btn btn-outline-info") }}
       </div>
     </form>
-  </div>
+</div>
 
 {% endblock %}

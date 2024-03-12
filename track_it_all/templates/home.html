@@ -4,26 +4,32 @@
 <h1>This is the Home page</h1>
 {% if user.is_authenticated %}
   <h1>Welcome, {{ user.username }}</h1>
-  <a href="/add-bug">Add Bugs</a>
+  <a class="btn btn-secondary btn-sm mt-1 mb-1" href="url_for('bugs.add_bug')">Add Bugs</a>
   {% for bug in bugs.items %}
-    <article>
-      <img src="{{ url_for('static', filename='profile_pics/' + bug.bug_adder.image_file) }}">
-      <div>
-        <div>
-          <a href="{{ url_for('bugs.user_bugs', first_name=bug.bug_adder.first_name) }}">{{ bug.bug_adder.first_name }}</a>
-          <small>{{ bug.date.strftime( '%Y-%m-%d' ) }}</small>
+    <article class="media content-section">
+      <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + bug.bug_adder.image_file) }}">
+      <div class="media-body">
+        <div class="article-metadata">
+          <a class="mr-2" href="{{ url_for('bugs.user_bugs', first_name=bug.bug_adder.first_name) }}">{{ bug.bug_adder.first_name }}</a>
+          <small class="text-muted">{{ bug.date.strftime('%Y-%m-%d') }}</small>
+          {% if bug.bug_adder == user %}
+            <div>
+              <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('bugs.update_bug', bug_id=bug.id) }}">Update</a>
+              <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+            </div>
+          {% endif %}
         </div>
-        <h2><a href="{{ url_for('bugs.get_bug', bug_id=bug.id) }}">{{ bug.title }}</a></h2>
-        <p>{{ bug.desc }}</p>
+        <h2 class="article-title"><a href="{{ url_for('bugs.get_bug', bug_id=bug.id) }}">{{ bug.title }}</a></h2>
+        <p class="article-content">{{ bug.desc }}</p>
       </div>
     </article>
   {% endfor %}
-  {% for page_num in bugs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
+  {% for page_num in bugs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
     {% if page_num %}
       {% if bugs.page == page_num %}
-        <a href="{{ url_for('main.home', page=page_num) }}"><b>{{ page_num }}</b></a>
+        <a class="btn btn-info mb-4" href="{{ url_for('main.home', page=page_num) }}"><b>{{ page_num }}</b></a>
       {% else %}
-        <a href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+        <a class="btn btn-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
       {% endif %}
     {% else %}
       ...
@@ -37,7 +43,7 @@
   {% endif %}
 {% else %}
   <h1>Welcome, Guest</h1>
-    <a href="/login">Login</a>
-    <a href="/sign-up">Sign Up</a>
+    <a class="btn btn-secondary btn-sm mt-1 mb-1" href="/login">Login</a>
+    <a class="btn btn-secondary btn-sm mt-1 mb-1" href="/sign-up">Sign Up</a>
 {% endif %}
 {% endblock %}
