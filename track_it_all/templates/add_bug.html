@@ -6,43 +6,42 @@
 
 <div class="content-section">
     <form method="POST" action="">
-      {{ form.hidden_tag() }}
-  
-      <fieldset>
-        <legend>{{ legend }}</legend>
-        <div>
-          {{ form.title.label }}
-          {% if form.title.errors %}
-            {{ form.title(class="is-invalid") }}
-            <div class="invalid-feedback">
-              {% for error in form.title.errors %}
-                <span>{{ error }}</span>
-              {% endfor %}
-            </div>
-          {% else %}
-            {{ form.title }}
-          {% endif %}
-        </div>
-  
-        <div>
-          {{ form.desc.label }}
-          {% if form.desc.errors %}
-            {{ form.desc(class="is-invalid") }}
-            <div class="invalid-feedback">
-              {% for error in form.desc.errors %}
-                <span>{{ error }}</span>
-              {% endfor %}
-            </div>
-          {% else %}
-            {{ form.desc }}
-          {% endif %}
-        </div>
+        {{ form.hidden_tag() }}
 
-      </fieldset>
-      <div>
-        {{ form.submit }}
-      </div>
+        <fieldset>
+            <legend class="border-bottom mb-4">{{ legend }}</legend>
+            <div class="mb-3">
+                {{ form.title.label(class="form-label") }}
+                {% if form.title.errors %}
+                {{ form.title(class="form-control is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.title.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.title(class="form-control") }}
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                {{ form.desc.label(class="form-label") }}
+                {% if form.desc.errors %}
+                {{ form.desc(class="form-control is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.desc.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.desc(class="form-control") }}
+                {% endif %}
+            </div>
+        </fieldset>
+
+        <div class="mb-3">
+            {{ form.submit(class="btn btn-outline-info") }}
+        </div>
     </form>
-  </div>
+</div>
 
 {% endblock %}

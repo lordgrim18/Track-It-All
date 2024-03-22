@@ -1,42 +1,43 @@
 {% extends "base.html" %} 
 {% block title %}Bugs{% endblock %} 
 {% block content%}
-<h1>Bugs by {{ user.first_name }} ({{ bugs.total }})</h1>
-{% if user.is_authenticated %}
-  <h1>Welcome, {{ user.username }}</h1>
-  <a href="/add-bug">Add Bugs</a>
+  <h1 class="mb-3">Bugs by {{user.first_name}} ({{ bugs.total }})</h1>
   {% for bug in bugs.items %}
-    <article>
-      <img src="{{ url_for('static', filename='profile_pics/' + bug.bug_adder.image_file) }}">
-      <div>
-        <div>
-          <small>{{ bug.date.strftime( '%Y-%m-%d' ) }}</small>
+    <article class="media content-section">
+      <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + bug.bug_adder.image_file) }}">
+      <div class="media-body">
+        <div class="article-metadata">
+          <a class="mr-2" href="{{ url_for('bugs.user_bugs', first_name=bug.bug_adder.first_name) }}">{{ bug.bug_adder.first_name }}</a>
+          <small class="text-muted">{{ bug.date.strftime('%Y-%m-%d') }}</small>
+          {% if bug.bug_adder == user %}
+            <div>
+              <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('bugs.update_bug', bug_id=bug.id) }}">Update</a>
+              <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+            </div>
+          {% endif %}
         </div>
-        <h2><a href="{{ url_for('bugs.get_bug', bug_id=bug.id) }}">{{ bug.title }}</a></h2>
-        <p>{{ bug.desc }}</p>
+        <h2><a class="article-title" href="{{ url_for('bugs.get_bug', bug_id=bug.id) }}">{{ bug.title }}</a></h2>
+        <p class="article-content">{{ bug.desc }}</p>
       </div>
     </article>
   {% endfor %}
-  {% for page_num in bugs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
+
+  {% for page_num in bugs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
     {% if page_num %}
       {% if bugs.page == page_num %}
-        <a href="{{ url_for('bugs.user_bugs', first_name=user.first_name, page=page_num) }}"><b>{{ page_num }}</b></a>
+        <a class="btn btn-primary mb-4 active" href="{{ url_for('bugs.user_bugs', first_name=user.first_name, page=page_num) }}"><b>{{ page_num }}</b></a>
       {% else %}
-        <a href="{{ url_for('bugs.user_bugs', first_name=user.first_name, page=page_num) }}">{{ page_num }}</a>
+        <a class="btn btn-outline-primary mb-4" href="{{ url_for('bugs.user_bugs', first_name=user.first_name, page=page_num) }}">{{ page_num }}</a>
       {% endif %}
     {% else %}
       ...
     {% endif %}
   {% endfor %}
+
   {% if bugs.has_next %}
-    <a href="{{ url_for('bugs.user_bugs', first_name=user.first_name, page=bugs.next_num) }}">Next</a>
+    <a class="btn btn-primary mb-4" href="{{ url_for('bugs.user_bugs', first_name=user.first_name, page=bugs.next_num) }}">Next</a>
   {% endif %}
   {% if bugs.has_prev %}
-    <a href="{{ url_for('bugs.user_bugs', first_name=user.first_name, page=bugs.prev_num) }}">Prev</a>
+    <a class="btn btn-outline-primary mb-4" href="{{ url_for('bugs.user_bugs', first_name=user.first_name, page=bugs.prev_num) }}">Prev</a>
   {% endif %}
-{% else %}
-  <h1>Welcome, Guest</h1>
-    <a href="/login">Login</a>
-    <a href="/sign-up">Sign Up</a>
-{% endif %}
 {% endblock %}
