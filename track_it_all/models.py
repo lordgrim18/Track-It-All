@@ -11,9 +11,12 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
     first_name = db.Column(db.String(150), nullable=False)
-    date = db.Column(db.DateTime(timezone=True), default=func.now(), nullable=False)
+    last_name = db.Column(db.String(150), nullable=False)
     image_file = db.Column(db.String(60), nullable=False, default='default.jpg')
     bugs = db.relationship('Bug', backref='bug_adder', lazy=True)
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now(), nullable=False)
+    updated_at = db.Column(db.DateTime(timezone=True), default=func.now(), onupdate=func.now(), nullable=False)
+    updated_by = db.Column(db.String(150), nullable=False, default='System')
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(config('SECRET_KEY'), expires_sec)
