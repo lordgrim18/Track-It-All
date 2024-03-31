@@ -10,6 +10,7 @@ from track_it_all.models import User
 class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     first_name = StringField('First Name', validators=[DataRequired(), Length(min=2, max=30)])
+    last_name = StringField('Last Name', validators=[DataRequired(), Length(min=2, max=30)])
     password1 = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password1')])
 
@@ -30,6 +31,7 @@ class LoginForm(FlaskForm):
 class UpdateAccountForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     first_name = StringField('First Name', validators=[DataRequired(), Length(min=2, max=30)])
+    last_name = StringField('Last Name', validators=[DataRequired(), Length(min=2, max=30)])
     picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
     
     submit = SubmitField('Update')

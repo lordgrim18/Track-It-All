@@ -73,7 +73,7 @@ class Bug(db.Model):
     title = db.Column(db.String(150), nullable=False)
     desc = db.Column(db.String(150), nullable=False)
     status = db.Column(db.String(150), nullable=False)
-    deadline_date = db.Column(db.DateTime(timezone=True), default=func.now(), nullable=False)
+    deadline_date = db.Column(db.DateTime(timezone=True), nullable=False)
     user_assigned = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
     project = db.Column(db.String(36), db.ForeignKey('project.id'), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), default=func.now(), nullable=False)

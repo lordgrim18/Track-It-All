@@ -1,14 +1,12 @@
 from decouple import config
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-# from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
 
 from track_it_all.configurations import Configurations
 
 db = SQLAlchemy()
-# bcrypt = Bcrypt()
 login_manager = LoginManager()
 login_manager.login_view = 'users.login'
 login_manager.login_message_category = 'info'
@@ -41,6 +39,6 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(id):
-        return User.query.get(int(id))
+        return User.query.get(id)
 
     return app
