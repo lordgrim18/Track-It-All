@@ -13,3 +13,4 @@ venv/
 # database
 *.db
 instance/
+migrations/
