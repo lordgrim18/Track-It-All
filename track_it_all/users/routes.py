@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, current_user, login_required
+
 from track_it_all import db
 
 from track_it_all.models import User
@@ -20,12 +21,14 @@ def account():
             current_user.image_file = picture_file
         current_user.email = form.email.data
         current_user.first_name = form.first_name.data
+        current_user.last_name = form.last_name.data
         db.session.commit()
         flash('Account updated!', category='success')
         return redirect(url_for('users.account'))
     elif request.method == 'GET':
         form.email.data = current_user.email
         form.first_name.data = current_user.first_name
+        form.last_name.data = current_user.last_name
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template('account.html', user=current_user, image_file=image_file, form=form)
 
@@ -59,14 +62,17 @@ def register():
     if form.validate_on_submit():
         email = form.email.data
         first_name = form.first_name.data
+        last_name = form.last_name.data
         password = form.password1.data
 
-        new_user = User(email=email, first_name=first_name, password=generate_password_hash(password))
+        new_user = User(email=email, first_name=first_name, last_name=last_name, password=generate_password_hash(password))
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user, remember=True)
         flash('Account created!', category='success')
         return redirect(url_for('main.home'))
+    else:
+        print(form.errors)
     return render_template('sign_up.html', user=current_user, form=form)
 
 @users.route('/logout')
