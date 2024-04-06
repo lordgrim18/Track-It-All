@@ -8,7 +8,7 @@ from decouple import config
 from track_it_all import db
 
 project_user = db.Table('project_user',
-                        db.Column('id', db.String(36), primary_key=True, default=str(uuid.uuid4())),
+                        db.Column('id', db.String(36), primary_key=True),
                         db.Column('project_id', db.String(36), db.ForeignKey('project.id', ondelete='CASCADE'), nullable=False),
                         db.Column('user_id', db.String(36), db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False),
                         db.Column('user_role', db.String(150), nullable=False),
@@ -21,7 +21,7 @@ project_user = db.Table('project_user',
                         )
 
 class User(db.Model, UserMixin):
-    id = db.Column(db.String(36), primary_key=True, default=str(uuid.uuid4()))
+    id = db.Column(db.String(36), primary_key=True)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     first_name = db.Column(db.String(150), nullable=False)
@@ -52,7 +52,7 @@ class User(db.Model, UserMixin):
         return f"User('{self.email}', '{self.first_name}')"
     
 class Project(db.Model):
-    id = db.Column(db.String(36), primary_key=True, default=str(uuid.uuid4()))
+    id = db.Column(db.String(36), primary_key=True)
     name = db.Column(db.String(150), nullable=False)
     about = db.Column(db.String(150), nullable=False)
     personal = db.Column(db.Boolean, nullable=False, default=False)
@@ -74,7 +74,7 @@ class Project(db.Model):
         return f"Project('{self.name}')"
 
 class Bug(db.Model):
-    id = db.Column(db.String(36), primary_key=True, default=str(uuid.uuid4()))
+    id = db.Column(db.String(36), primary_key=True)
     title = db.Column(db.String(150), nullable=False)
     about = db.Column(db.String(150), nullable=False)
     bug_status = db.Column(db.String(150), nullable=False)
