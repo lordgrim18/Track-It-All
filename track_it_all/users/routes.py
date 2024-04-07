@@ -1,3 +1,4 @@
+import uuid
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, current_user, login_required
@@ -65,14 +66,12 @@ def register():
         last_name = form.last_name.data
         password = form.password1.data
 
-        new_user = User(email=email, first_name=first_name, last_name=last_name, password=generate_password_hash(password))
+        new_user = User(id=uuid.uuid4(), email=email, first_name=first_name, last_name=last_name, password=generate_password_hash(password))
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user, remember=True)
         flash('Account created!', category='success')
         return redirect(url_for('main.home'))
-    else:
-        print(form.errors)
     return render_template('sign_up.html', user=current_user, form=form)
 
 @users.route('/logout')
