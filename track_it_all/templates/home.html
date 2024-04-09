@@ -4,7 +4,8 @@
 <div class="container">
   <h1>This is the Home page</h1>
   {% if user.is_authenticated %}
-  <h1>Welcome, {{ user.username }}</h1>
+  <h1>Welcome, {{ user.first_name }}</h1>
+  <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('projects.add_project') }}">Add Project</a>
   <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('bugs.add_bug') }}">Add Bugs</a>
   {% for bug in bugs.items %}
   <article class="media content-section">
