@@ -66,7 +66,7 @@ def register():
         last_name = form.last_name.data
         password = form.password1.data
 
-        new_user = User(id=uuid.uuid4(), email=email, first_name=first_name, last_name=last_name, password=generate_password_hash(password))
+        new_user = User(email=email, first_name=first_name, last_name=last_name, password=generate_password_hash(password))
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user, remember=True)
