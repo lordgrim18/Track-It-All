@@ -1,7 +1,7 @@
 {% extends "base.html" %} 
 {% block title %}Projects{% endblock %} 
 {% block content%}
-  <h1 class="mb-3">Projects assigned to {{user.first_name}} ({{ user.get_all_projects.total }})</h1>
+  <h1 class="mb-3">Projects assigned to {{user.first_name}} ({{ projects.total }} no.s)</h1>
   {% for project in projects.items %}
     <article class="media content-section">
       <div class="media-body">
