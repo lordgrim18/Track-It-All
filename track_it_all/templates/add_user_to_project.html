@@ -7,7 +7,7 @@
 <div class="content-section">
     <form method="POST" action="">
         {{ form.hidden_tag() }}
-
+        <input type="hidden" name="project_id" value="{{ project_id }}">
         <fieldset>
             <legend class="border-bottom mb-4">{{ legend }}</legend>
             <div class="mb-3">
@@ -25,15 +25,20 @@
             </div>
             <div class="mb-3">
                 {{ form.role.label(class="form-label") }}
-                {% if form.role.errors %}
-                {{ form.role(class="form-control is-invalid") }}
-                <div class="invalid-feedback">
-                    {% for error in form.role.errors %}
-                    <span>{{ error }}</span>
-                    {% endfor %}
+                <div class="input-group">
+                    <select name="{{ form.role.name }}" class="form-select {% if form.role.errors %}is-invalid{% endif %}">
+                        <option value="" selected disabled>Select a role</option>
+                        {% for value, label in form.role.choices %}
+                            <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
-                {% else %}
-                {{ form.role(class="form-control") }}
+                {% if form.role.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.role.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
                 {% endif %}
             </div>
         </fieldset>
