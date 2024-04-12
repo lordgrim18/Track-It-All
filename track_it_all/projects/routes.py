@@ -38,3 +38,9 @@ def add_project():
         flash('Project added!', category='success')
         return redirect(url_for('main.home'))
     return render_template('add_project.html', user=current_user, form=form, legend='Add Project')
+
+@projects.route('/get-project/<string:project_id>', methods=['GET', 'POST'])
+@login_required
+def get_project(project_id):
+    project = Project.query.get_or_404(project_id)
+    return render_template('project.html', user=current_user, project=project)
