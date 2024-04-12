@@ -67,3 +67,14 @@ def update_project(project_id):
         form.personal.data = project.personal
         form.group_project.data = project.group_project
     return render_template('add_project.html', user=current_user, form=form, legend='Update Project')
+
+@projects.route('/delete-project/<string:project_id>', methods=['GET', 'POST'])
+@login_required
+def delete_project(project_id):
+    project = Project.query.get_or_404(project_id)
+    if project.manager().id != current_user.id:
+        abort(403)
+    db.session.delete(project)
+    db.session.commit()
+    flash('Project deleted!', category='success')
+    return redirect(url_for('main.home'))
