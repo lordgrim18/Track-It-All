@@ -14,6 +14,7 @@
   <article class="media content-section">
     <div class="media-body">
       <div class="article-metadata">
+        <a class="mr-2" href="{{ url_for('projects.user_projects', user_id=user.id) }}">{{ project.manager().first_name }}</a>
         <small class="text-muted">{{ project.created_at.strftime('%Y-%m-%d') }}</small>
       </div>
       <a class="mr-2" href="{{ url_for('projects.get_project', project_id=project.id) }}">
