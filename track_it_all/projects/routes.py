@@ -44,3 +44,26 @@ def add_project():
 def get_project(project_id):
     project = Project.query.get_or_404(project_id)
     return render_template('project.html', user=current_user, project=project)
+
+@projects.route('/update-project/<string:project_id>', methods=['GET', 'POST'])
+@login_required
+def update_project(project_id):
+    project = Project.query.get_or_404(project_id)
+    if project.manager().id != current_user.id:
+        abort(403)
+    form = ProjectForm()
+    if form.validate_on_submit():
+        project.name = form.name.data
+        project.about = form.about.data
+        project.personal = form.personal.data
+        project.group_project = form.group_project.data
+        project.updated_by = str(current_user.id)
+        db.session.commit()
+        flash('Project updated!', category='success')
+        return redirect(url_for('projects.get_project', project_id=project.id))
+    elif request.method == 'GET':
+        form.name.data = project.name
+        form.about.data = project.about
+        form.personal.data = project.personal
+        form.group_project.data = project.group_project
+    return render_template('add_project.html', user=current_user, form=form, legend='Update Project')
