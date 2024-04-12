@@ -47,7 +47,7 @@ class User(db.Model, UserMixin):
         return User.query.get(user_id)
     
     def get_all_projects(self):
-        return Project.query.join(project_user).filter(project_user.c.user_id == self.id).all()
+        return Project.query.join(project_user).filter(project_user.c.user_id == self.id)
 
     def __repr__(self):
         return f"User('{self.email}', '{self.first_name}')"
