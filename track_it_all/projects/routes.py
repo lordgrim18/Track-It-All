@@ -78,3 +78,11 @@ def delete_project(project_id):
     db.session.commit()
     flash('Project deleted!', category='success')
     return redirect(url_for('main.home'))
+
+@projects.route('/user-projects/<string:user_id>')
+@login_required
+def user_projects(user_id):
+    page = request.args.get('page', 1, type=int)
+    user = User.query.get_or_404(user_id)
+    projects = user.get_all_projects().paginate(page=page, per_page=5)
+    return render_template('user_projects.html', user=current_user, projects=projects)
