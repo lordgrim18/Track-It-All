@@ -6,6 +6,7 @@ from itsdangerous import URLSafeTimedSerializer as Serializer
 from decouple import config
 
 from track_it_all import db
+from track_it_all.projects.utils import Project_Roles
 
 project_user = db.Table('project_user',
                         db.Column('id', db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()), unique=True),
@@ -68,7 +69,34 @@ class Project(db.Model):
     bugs = db.relationship('Bug', backref='project_bugs', lazy='dynamic', foreign_keys='Bug.project')
 
     def get_all_users(self):
-        return User.query.join(project_user).filter(project_user.c.project_id == self.id).all()
+        return User.query.join(project_user,
+        onclause=project_user.c.user_id == User.id).filter(
+            project_user.c.project_id == self.id
+            ).all()
+    
+    def manager(self):
+        return User.query.join(project_user, onclause=project_user.c.user_id == User.id).filter(
+            project_user.c.project_id == self.id,
+            project_user.c.user_role == Project_Roles.MANAGER.value
+        ).first()
+
+    def developers(self):
+        return User.query.join(project_user, onclause=project_user.c.user_id == User.id).filter(
+            project_user.c.project_id == self.id,
+            project_user.c.user_role == Project_Roles.DEVELOPER.value
+        ).all()
+
+    def testers(self):
+        return User.query.join(project_user, onclause=project_user.c.user_id == User.id).filter(
+            project_user.c.project_id == self.id,
+            project_user.c.user_role == Project_Roles.TESTER.value
+        ).all()
+
+    def designers(self):
+        return User.query.join(project_user, onclause=project_user.c.user_id == User.id).filter(
+            project_user.c.project_id == self.id,
+            project_user.c.user_role == Project_Roles.DESIGNER.value
+        ).all()
 
     def __repr__(self):
         return f"Project('{self.name}')"
