@@ -2,8 +2,9 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SubmitField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Email, ValidationError
 
+from track_it_all import db
 from track_it_all.projects.utils import Project_Roles
-from track_it_all.models import User
+from track_it_all.models import User, project_user
 
 class ProjectForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
@@ -15,10 +16,25 @@ class ProjectForm(FlaskForm):
 
 class ProjectUserForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
-    role = SelectField('Role', choices=[(role.value, role.value) for role in Project_Roles], validators=[DataRequired()])
+    role = SelectField(
+        'Role',
+        choices=[(role.value, role.value) for role in Project_Roles if role != Project_Roles.MANAGER],
+        validators=[DataRequired(message="Please select a role.")]
+    )
 
     submit = SubmitField('Add')
 
-    def validate_email(form, field):
-        if not User.query.filter_by(email=field.data).first():
+    def __init__(self, project_id, *args, **kwargs):
+        super(ProjectUserForm, self).__init__(*args, **kwargs)
+        self.project_id = project_id
+
+    def validate_email(self, email):
+        if not User.query.filter_by(email=email.data).first():
             raise ValidationError('No user with that email exists! Please ask them to sign up.')
+
+        # Check if the user is already associated with the project
+        if db.session.query(project_user).filter(
+            project_user.c.project_id == self.project_id,
+            project_user.c.user_id == User.query.filter_by(email=email.data).first().id
+        ).first():
+            raise ValidationError('User is already associated with the project.')

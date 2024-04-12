@@ -87,13 +87,13 @@ def user_projects(user_id):
     projects = user.get_all_projects().paginate(page=page, per_page=5)
     return render_template('user_projects.html', user=current_user, projects=projects)
 
-@projects.route('/add-user-to-project/<string:project_id>')
+@projects.route('/add-user-to-project/<string:project_id>', methods=['GET', 'POST'])
 @login_required
 def add_user_to_project(project_id):
     project = Project.query.get_or_404(project_id)
     if project.manager().id != current_user.id:
         abort(403)
-    form = ProjectUserForm()
+    form = ProjectUserForm(project_id)
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         project_user_row = project_user.insert().values(
