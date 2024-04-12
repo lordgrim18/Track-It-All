@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 
 from track_it_all.models import Project, Bug, User, project_user
 from track_it_all import db
-from track_it_all.projects.forms import ProjectForm
+from track_it_all.projects.forms import ProjectForm, ProjectUserForm
 from track_it_all.projects.utils import Project_Roles
 
 projects = Blueprint('projects', __name__)
@@ -86,3 +86,25 @@ def user_projects(user_id):
     user = User.query.get_or_404(user_id)
     projects = user.get_all_projects().paginate(page=page, per_page=5)
     return render_template('user_projects.html', user=current_user, projects=projects)
+
+@projects.route('/add-user-to-project/<string:project_id>')
+@login_required
+def add_user_to_project(project_id):
+    project = Project.query.get_or_404(project_id)
+    if project.manager().id != current_user.id:
+        abort(403)
+    form = ProjectUserForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        project_user_row = project_user.insert().values(
+            project_id=project.id, 
+            user_id=user.id, 
+            user_role=form.role.data,
+            created_by=current_user.id,
+            updated_by=current_user.id
+            )
+        db.session.execute(project_user_row)
+        db.session.commit()
+        flash('User added to project!', category='success')
+        return redirect(url_for('projects.get_project', project_id=project.id))
+    return render_template('add_user_to_project.html', user=current_user, form=form, legend='Add User To Project')

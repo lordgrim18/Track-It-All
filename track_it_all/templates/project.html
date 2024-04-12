@@ -35,6 +35,7 @@
         {% endif %}
         {% if project.manager() == user %}
           <a class="btn btn-secondary btn-sm me-1" href="">Add Bug</a>
+          <a class="btn btn-secondary btn-sm" href="{{ url_for('projects.add_user_to_project', project_id=project.id) }}">Add User</a>
         {% endif %}
       </div>
     </article>
