@@ -7,6 +7,27 @@
   <h1>Welcome, {{ user.first_name }}</h1>
   <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('projects.add_project') }}">Add Project</a>
   <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('bugs.add_bug') }}">Add Bugs</a>
+  <br>
+  <br>
+  <h2>Projects</h2>
+  {% for project in projects %}
+  <article class="media content-section">
+    <div class="media-body">
+      <div class="article-metadata">
+        <a class="mr-2" href="{{ url_for('projects.user_projects', user_id=user.id) }}">{{ project.manager().first_name }}</a>
+        <small class="text-muted">{{ project.created_at.strftime('%Y-%m-%d') }}</small>
+      </div>
+      <a class="mr-2" href="{{ url_for('projects.get_project', project_id=project.id) }}">
+        <h2 class="article-title">{{ project.name }}</h2>
+      </a>
+      <p class="article-content">{{ project.about }}</p>
+    </div>
+  </article>
+  {% endfor %}
+ 
+  <br>
+  <br>
+  <h2>Bugs</h2>
   {% for bug in bugs.items %}
   <article class="media content-section">
     <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + bug.bug_adder.image_file) }}">

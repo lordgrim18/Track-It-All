@@ -1,0 +1,67 @@
+{% extends "base.html" %} 
+
+{% block title %}Project Description{% endblock %} 
+
+{% block content%}
+
+<div class="container">
+  <h1 class="mt-5 mb-4">This is the Project Description page</h1>
+
+  {% if user.is_authenticated %}
+    <article class="media content-section">
+      <div class="media-body">
+        <div class="article-metadata mb-3">
+          <small class="text-muted">{{ project.created_at.strftime('%Y-%m-%d') }}</small>
+          {% if project.manager() == user %}
+            <div>
+              <a class="btn btn-secondary btn-sm me-1" href="{{ url_for('projects.update_project', project_id=project.id) }}">Update</a>
+              <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+            </div>
+          {% endif %}
+        </div>
+        <h2 class="article-title">{{ project.name }}</h2>
+        <p class="article-content">{{ project.about }}</p>
+        {% if project.group_project %}
+          <p class="article-content">This is a group project</p>
+          <h4>Manager</h4>
+          <p class="article-content">{{ project.manager().first_name }}</p>
+          <h4>Members</h4>
+          <ul>
+            {% for member in project.get_all_users() %}
+              <li>{{ member.first_name }}</li>
+            {% endfor %}
+        {% else %}
+          <p class="article-content">This is an individual project</p>
+        {% endif %}
+        {% if project.manager() == user %}
+          <a class="btn btn-secondary btn-sm me-1" href="">Add Bug</a>
+        {% endif %}
+      </div>
+    </article>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Delete Project?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <form action="{{ url_for('projects.delete_project', project_id=project.id) }}" method="POST">
+              <input class="btn btn-danger" type="submit" value="Delete">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  {% else %}
+    <h1 class="mt-5 mb-4">Welcome, Guest</h1>
+    <a class="btn btn-secondary btn-sm me-1" href="/login">Login</a>
+    <a class="btn btn-secondary btn-sm" href="/sign-up">Sign Up</a>
+  {% endif %}
+</div>
+
+{% endblock %}

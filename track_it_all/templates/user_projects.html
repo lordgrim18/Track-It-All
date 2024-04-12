@@ -1,0 +1,49 @@
+{% extends "base.html" %} 
+{% block title %}Projects{% endblock %} 
+{% block content%}
+  <h1 class="mb-3">Projects assigned to {{user.first_name}} ({{ projects.total }} no.s)</h1>
+  {% for project in projects.items %}
+    <article class="media content-section">
+      <div class="media-body">
+        <div class="article-metadata">
+          <small class="text-muted">{{ project.created_at.strftime('%Y-%m-%d') }}</small>
+          {% if project.manager() == user %}
+            <div>
+              <a class="btn btn-secondary btn-sm me-1" href="{{ url_for('projects.update_project', project_id=project.id) }}">Update</a>
+              <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+            </div>
+          {% endif %}
+        </div>
+        <h2 class="article-title">{{ project.name }}</h2>
+        <p class="article-content">{{ project.about }}</p>
+        {% if project.group_project %}
+          <p class="article-content">This is a group project</p>
+        {% else %}
+            <p class="article-content">This is an individual project</p>
+        {% endif %}
+        {% if project.manager() == user %}
+            <a class="btn btn-secondary btn-sm me-1" href="">Add Bug</a>
+        {% endif %}
+      </div>
+    </article>
+  {% endfor %}
+
+  {% for page_num in projects.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+    {% if page_num %}
+      {% if projects.page == page_num %}
+        <a class="btn btn-primary mb-4 active" href="{{ url_for('projects.user_projects', user_id=user.id, page=page_num) }}"><b>{{ page_num }}</b></a>
+      {% else %}
+        <a class="btn btn-outline-primary mb-4" href="{{ url_for('projects.user_projects', user_id=user.id, page=page_num) }}">{{ page_num }}</a>
+      {% endif %}
+    {% else %}
+      ...
+    {% endif %}
+  {% endfor %}
+
+  {% if projects.has_next %}
+    <a class="btn btn-primary mb-4" href="{{ url_for('projects.user_projects', user_id=user.id, page=projects.next_num) }}">Next</a>
+  {% endif %}
+  {% if projects.has_prev %}
+    <a class="btn btn-outline-primary mb-4" href="{{ url_for('projects.user_projects', user_id=user.id, page=projects.prev_num) }}">Prev</a>
+  {% endif %}
+{% endblock %}
