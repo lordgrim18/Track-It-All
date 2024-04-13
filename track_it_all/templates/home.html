@@ -6,7 +6,6 @@
   {% if user.is_authenticated %}
   <h1>Welcome, {{ user.first_name }}</h1>
   <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('projects.add_project') }}">Add Project</a>
-  <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('bugs.add_bug') }}">Add Bugs</a>
   <br>
   <br>
   <h2>Projects</h2>

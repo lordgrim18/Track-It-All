@@ -1,22 +1,34 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
 from flask_login import login_required, current_user
 
-from track_it_all.models import Bug, User
+from track_it_all.models import Bug, User, Project
 from track_it_all import db
 from track_it_all.bugs.forms import BugForm
 
 bugs = Blueprint('bugs', __name__)
 
-@bugs.route('/add-bug', methods=['GET', 'POST'])
+@bugs.route('/add-bug/<string:project_id>', methods=['GET', 'POST'])
 @login_required
-def add_bug():
-    form = BugForm()
+def add_bug(project_id):
+    project = Project.query.get_or_404(project_id)
+    if current_user not in project.get_all_users():
+        abort(403)
+    form = BugForm(project_id=project_id)
     if form.validate_on_submit():
-        bug = Bug(title=form.title.data, desc=form.desc.data, bug_adder=current_user)
+        bug = Bug(
+            title=form.title.data, 
+            about=form.about.data,
+            bug_status=form.bug_status.data,
+            priority=form.priority.data,
+            user_assigned=form.user_assigned.data,
+            project=form.project_id,
+            created_by=str(current_user.id),
+            updated_by=str(current_user.id)
+            )
         db.session.add(bug)
         db.session.commit()
-        flash('Bug added!', category='success')
-        return redirect(url_for('main.home'))
+        flash('Bug added to project!', category='success')
+        return redirect(url_for('projects.get_project', project_id=project.id))
     return render_template('add_bug.html', user=current_user, form=form, legend='Add Bug')
 
 @bugs.route('bug/get/<string:bug_id>')
