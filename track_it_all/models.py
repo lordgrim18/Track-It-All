@@ -48,6 +48,12 @@ class User(db.Model, UserMixin):
     
     def get_all_projects(self):
         return Project.query.join(project_user).filter(project_user.c.user_id == self.id)
+    
+    def get_role(self, project_id):
+        return db.session.query(project_user).filter(
+            project_user.c.project_id == project_id,
+            project_user.c.user_id == self.id
+        ).first().user_role
 
     def __repr__(self):
         return f"User('{self.email}', '{self.first_name}')"
