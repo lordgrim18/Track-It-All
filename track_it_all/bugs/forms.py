@@ -10,7 +10,7 @@ class BugForm(FlaskForm):
     about = TextAreaField('Description', validators=[DataRequired()])
     bug_status = SelectField(
         'Status',
-        choices=[(status.value, status.value) for status in Bug_Status],
+        choices=[],
         validators=[DataRequired(message="Please select a status.")]
     )
     priority = SelectField(
@@ -26,11 +26,27 @@ class BugForm(FlaskForm):
 
     submit = SubmitField('Submit')
 
-    def __init__(self, project_id, request_method='POST', *args, **kwargs):
+    def __init__(self, project_id, creator_user, request_method='POST', *args, **kwargs):
         super(BugForm, self).__init__(*args, **kwargs)
         self.project_id = project_id
         self.request_method = request_method
-        self.user_assigned.choices = [(user.id, user.first_name) for user in Project.query.get(project_id).get_all_users()]
+        self.user_assigned.choices = [
+            (user.id, user.first_name) \
+                for user in Project.query.get(project_id).get_all_users() \
+                    if user.id != Project.query.get(project_id).manager().id
+                    ]
+        if creator_user.get_role(project_id) == 'Developer':
+            self.bug_status.choices = [
+                (status.value, status.value) for status in Bug_Status if status not in [Bug_Status.VERIFIED, Bug_Status.CLOSED]
+            ]
+        elif creator_user.get_role(project_id) == 'Tester' or creator_user.get_role(project_id) == 'Designer':
+            self.bug_status.choices = [
+                (status.value, status.value) for status in Bug_Status if status not in [Bug_Status.CLOSED]
+            ]
+        else:
+            self.bug_status.choices = [
+                (status.value, status.value) for status in Bug_Status
+            ] 
 
     def validate(self, extra_validators=None):
         initial_validation = super(BugForm, self).validate(extra_validators)

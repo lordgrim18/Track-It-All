@@ -13,7 +13,7 @@ def add_bug(project_id):
     project = Project.query.get_or_404(project_id)
     if current_user not in project.get_all_users():
         abort(403)
-    form = BugForm(project_id=project_id)
+    form = BugForm(project_id=project_id, creator_user=current_user)
     if form.validate_on_submit():
         bug = Bug(
             title=form.title.data, 
