@@ -100,8 +100,8 @@ def add_user_to_project(project_id):
             project_id=project.id, 
             user_id=user.id, 
             user_role=form.role.data,
-            created_by=current_user.id,
-            updated_by=current_user.id
+            created_by=current_user,
+            updated_by=current_user
             )
         db.session.execute(project_user_row)
         db.session.commit()
@@ -144,7 +144,7 @@ def update_user_role(project_id, user_id):
         db.session.query(project_user).filter(
             project_user.c.project_id == project.id,
             project_user.c.user_id == user.id
-        ).update({'user_role': form.role.data})
+        ).update({'user_role': form.role.data, 'updated_by': str(current_user.id)})
         db.session.commit()
         flash('User role updated!', category='success')
         return redirect(url_for('projects.get_project', project_id=project.id))
