@@ -108,3 +108,21 @@ def add_user_to_project(project_id):
         flash('User added to project!', category='success')
         return redirect(url_for('projects.get_project', project_id=project.id))
     return render_template('add_user_to_project.html', user=current_user, form=form, legend='Add User To Project')
+
+@projects.route('/remove-user-from-project/<string:project_id>/<string:user_id>', methods=['GET', 'POST'])
+@login_required
+def remove_user_from_project(project_id, user_id):
+    project = Project.query.get_or_404(project_id)
+    user = User.query.get_or_404(user_id)
+    if project.manager().id != current_user.id:
+        abort(403)
+    if user.id == project.manager().id:
+        flash('Cannot remove the project manager from the project!', category='danger')
+        return redirect(url_for('projects.get_project', project_id=project.id))
+    db.session.query(project_user).filter(
+        project_user.c.project_id == project.id,
+        project_user.c.user_id == user.id
+    ).delete()
+    db.session.commit()
+    flash('User removed from project!', category='success')
+    return redirect(url_for('projects.get_project', project_id=project.id))

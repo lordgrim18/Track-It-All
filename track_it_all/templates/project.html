@@ -28,12 +28,42 @@
           <h4>Members</h4>
           <ul>
             {% for member in project.get_all_users() %}
+            {% if member != project.manager() %}
               <li>{{ member.first_name }}</li>
+              {% if project.manager() == user %}
+              
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmRemoveModal{{ member.id }}">
+                  Remove {{ member.first_name }}
+                </button>
+                
+                <!-- Confirmation Modal for Removing Member -->
+                <div class="modal fade" id="confirmRemoveModal{{ member.id }}" tabindex="-1" aria-labelledby="confirmRemoveModal{{ member.id }}Label" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="confirmRemoveModal{{ member.id }}Label">Remove {{ member.first_name }} from project?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <form action="{{ url_for('projects.remove_user_from_project', project_id=project.id, user_id=member.id) }}" method="POST">
+                          <input class="btn btn-danger" type="submit" value="Remove">
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+              {% endif %}
+            {% endif %}
             {% endfor %}
         {% else %}
           <p class="article-content">This is an individual project</p>
         {% endif %}
         {% if project.manager() == user %}
+        <br>
+        <br>
+        <br>
           <a class="btn btn-secondary btn-sm me-1" href="">Add Bug</a>
           <a class="btn btn-secondary btn-sm" href="{{ url_for('projects.add_user_to_project', project_id=project.id) }}">Add User</a>
         {% endif %}
