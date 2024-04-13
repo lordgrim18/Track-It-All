@@ -67,10 +67,38 @@
         <h2>Bugs</h2>
         <ul>
           {% for bug in project.get_all_bugs() %}
-            <li><a href="{{ url_for('bugs.get_bug', bug_id=bug.id) }}">{{ bug.title }}</a> - {{ bug.priority }}</li>
-            <a class="btn btn-secondary btn-sm me-1" href="{{ url_for('bugs.update_bug', bug_id=bug.id) }}">Update Bug</a>
+          <li>
+            <a href="{{ url_for('bugs.get_bug', bug_id=bug.id) }}">{{ bug.title }}</a> - {{ bug.priority }}
+            <div>
+              <a class="btn btn-secondary btn-sm me-1" href="{{ url_for('bugs.update_bug', bug_id=bug.id) }}">Update Bug</a>
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ bug.id }}">
+                Delete Bug
+              </button>
+            </div>
+          </li>
           {% endfor %}
         </ul>
+
+        <!-- Delete Modal -->
+        {% for bug in project.get_all_bugs() %}
+        <div class="modal fade" id="deleteModal{{ bug.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ bug.id }}" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel{{ bug.id }}">Delete Bug?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form action="{{ url_for('bugs.delete_bug', bug_id=bug.id) }}" method="POST">
+                  <input class="btn btn-danger" type="submit" value="Delete">
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
 
         <br>
         <br>

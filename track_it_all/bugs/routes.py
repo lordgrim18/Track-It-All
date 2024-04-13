@@ -69,12 +69,12 @@ def update_bug(bug_id):
 @login_required
 def delete_bug(bug_id):
     bug = Bug.query.get_or_404(bug_id)
-    if bug.bug_adder != current_user:
+    if current_user not in Project.query.get(bug.project).get_all_users():
         abort(403)
     db.session.delete(bug)
     db.session.commit()
     flash('Bug deleted!', category='success')
-    return redirect(url_for('main.home'))
+    return redirect(url_for('projects.get_project', project_id=bug.project))
 
 @bugs.route('/user/<string:first_name>')
 @login_required
