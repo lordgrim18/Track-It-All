@@ -12,7 +12,7 @@ class ProjectForm(FlaskForm):
     personal = BooleanField('Personal')
     group_project = BooleanField('Group')
 
-    submit = SubmitField('Add')
+    submit = SubmitField('Submit')
 
 class ProjectUserForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -22,19 +22,21 @@ class ProjectUserForm(FlaskForm):
         validators=[DataRequired(message="Please select a role.")]
     )
 
-    submit = SubmitField('Add')
+    submit = SubmitField('Submit')
 
-    def __init__(self, project_id, *args, **kwargs):
+    def __init__(self, project_id, request_method='POST', *args, **kwargs):
         super(ProjectUserForm, self).__init__(*args, **kwargs)
         self.project_id = project_id
+        self.request_method = request_method
 
     def validate_email(self, email):
         if not User.query.filter_by(email=email.data).first():
             raise ValidationError('No user with that email exists! Please ask them to sign up.')
 
         # Check if the user is already associated with the project
-        if db.session.query(project_user).filter(
-            project_user.c.project_id == self.project_id,
-            project_user.c.user_id == User.query.filter_by(email=email.data).first().id
-        ).first():
-            raise ValidationError('User is already associated with the project.')
+        if self.request_method == 'POST': 
+            if db.session.query(project_user).filter(
+                project_user.c.project_id == self.project_id,
+                project_user.c.user_id == User.query.filter_by(email=email.data).first().id
+            ).first():
+                raise ValidationError('User is already associated with the project.')
