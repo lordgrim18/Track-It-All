@@ -80,6 +80,9 @@ class Project(db.Model):
             project_user.c.project_id == self.id
             ).all()
     
+    def get_all_bugs(self):
+        return Bug.query.filter_by(project=self.id).all()
+    
     def manager(self):
         return User.query.join(project_user, onclause=project_user.c.user_id == User.id).filter(
             project_user.c.project_id == self.id,
