@@ -29,12 +29,14 @@
           <ul>
             {% for member in project.get_all_users() %}
             {% if member != project.manager() %}
-              <li>{{ member.first_name }}</li>
+              <li>{{ member.first_name }} - {{ member.get_role(project.id) }}</li>
               {% if project.manager() == user %}
-              
+              <div>
+                <a class="btn btn-secondary btn-sm me-1" href="{{ url_for('projects.update_user_role', project_id=project.id, user_id=member.id) }}">Update Role </a>
                 <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmRemoveModal{{ member.id }}">
                   Remove {{ member.first_name }}
                 </button>
+              </div>
                 
                 <!-- Confirmation Modal for Removing Member -->
                 <div class="modal fade" id="confirmRemoveModal{{ member.id }}" tabindex="-1" aria-labelledby="confirmRemoveModal{{ member.id }}Label" aria-hidden="true">

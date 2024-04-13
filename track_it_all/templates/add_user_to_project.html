@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}Add User to Project{% endblock %}
+{% block title %}{{legend}}{% endblock %}
 
 {% block content %}
 
 <div class="content-section">
+    {% if legend == 'Add User To Project' %}
     <form method="POST" action="">
         {{ form.hidden_tag() }}
         <input type="hidden" name="project_id" value="{{ project_id }}">
@@ -43,10 +44,32 @@
             </div>
         </fieldset>
 
+        {% else %}
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <input type="hidden" name="_method" value="PATCH">
+            <fieldset>
+                <legend class="border-bottom mb-4">{{ legend }}</legend>
+                <div class="mb-3">
+                    {{ form.role.label(class="form-label") }}
+                    {% if form.role.errors %}
+                    {{ form.role(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.role.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.role(class="form-control") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+        {% endif %}
+    
         <div class="mb-3">
             {{ form.submit(class="btn btn-outline-info") }}
         </div>
     </form>
-</div>
-
-{% endblock %}
+    </div>
+    
+    {% endblock %}
