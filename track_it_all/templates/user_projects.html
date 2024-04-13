@@ -22,7 +22,7 @@
             <p class="article-content">This is an individual project</p>
         {% endif %}
         {% if project.manager() == user %}
-            <a class="btn btn-secondary btn-sm me-1" href="">Add Bug</a>
+            <a class="btn btn-secondary btn-sm me-1" href="{{ url_for('bugs.add_bug', project_id=project.id) }}">Add Bug</a>
         {% endif %}
       </div>
     </article>

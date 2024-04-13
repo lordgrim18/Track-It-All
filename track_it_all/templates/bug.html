@@ -9,20 +9,19 @@
 
   {% if user.is_authenticated %}
     <article class="media content-section">
-      <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + bug.bug_adder.image_file) }}">
       <div class="media-body">
         <div class="article-metadata mb-3">
-          <a class="me-2" href="{{ url_for('bugs.user_bugs', first_name=bug.bug_adder.first_name) }}">{{ bug.bug_adder.first_name }}</a>
-          <small class="text-muted">{{ bug.date.strftime('%Y-%m-%d') }}</small>
-          {% if bug.bug_adder == user %}
+          <h5>{{ user_assigned.first_name }}</h5>
             <div>
               <a class="btn btn-secondary btn-sm me-1" href="{{ url_for('bugs.update_bug', bug_id=bug.id) }}">Update</a>
               <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
             </div>
-          {% endif %}
         </div>
         <h2 class="article-title">{{ bug.title }}</h2>
-        <p class="article-content">{{ bug.desc }}</p>
+        <p class="article-content">{{ bug.about }}</p>
+        <h5>{{ bug.user_assigned.first_name }}</h5>
+        <h4>{{ bug.priority }}</h4>
+        <h4>{{ bug.bug_status }}</h4>
       </div>
     </article>
 

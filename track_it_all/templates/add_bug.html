@@ -5,6 +5,7 @@
 {% block content %}
 
 <div class="content-section">
+    {% if legend == 'Add Bug' %}
     <form method="POST" action="">
         {{ form.hidden_tag() }}
 
@@ -24,19 +25,147 @@
                 {% endif %}
             </div>
             <div class="mb-3">
-                {{ form.desc.label(class="form-label") }}
-                {% if form.desc.errors %}
-                {{ form.desc(class="form-control is-invalid") }}
+                {{ form.about.label(class="form-label") }}
+                {% if form.about.errors %}
+                {{ form.about(class="form-control is-invalid") }}
                 <div class="invalid-feedback">
-                    {% for error in form.desc.errors %}
+                    {% for error in form.about.errors %}
                     <span>{{ error }}</span>
                     {% endfor %}
                 </div>
                 {% else %}
-                {{ form.desc(class="form-control") }}
+                {{ form.about(class="form-control") }}
                 {% endif %}
             </div>
+            <div class="mb-3">
+                {{ form.priority.label(class="form-label") }}
+                <div class="input-group">
+                    <select name="{{ form.priority.name }}" class="form-select {% if form.priority.errors %}is-invalid{% endif %}">
+                        <option value="" selected disabled>Select a priority</option>
+                        {% for value, label in form.priority.choices %}
+                            <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% if form.priority.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.priority.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                {{ form.bug_status.label(class="form-label") }}
+                <div class="input-group">
+                    <select name="{{ form.bug_status.name }}" class="form-select {% if form.bug_status.errors %}is-invalid{% endif %}">
+                        <option value="" selected disabled>Select a status</option>
+                        {% for value, label in form.bug_status.choices %}
+                            <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% if form.bug_status.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.bug_status.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                {{ form.user_assigned.label(class="form-label") }}
+                <div class="input-group">
+                    <select name="{{ form.user_assigned.name }}" class="form-select {% if form.user_assigned.errors %}is-invalid{% endif %}">
+                        <option value="" selected disabled>Select a user</option>
+                        {% for user in form.user_assigned.choices %}
+                            <option value="{{ user[0] }}">{{ user[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                    {% if form.user_assigned.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.user_assigned.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+            </div>
         </fieldset>
+
+        {% else %}
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <input type="hidden" name="_method" value="PATCH">
+            <fieldset>
+                <legend class="border-bottom mb-4">{{ legend }}</legend>
+                <div class="mb-3">
+                    {{ form.title.label(class="form-label") }}
+                    {% if form.title.errors %}
+                    {{ form.title(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.title.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.title(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {{ form.about.label(class="form-label") }}
+                    {% if form.about.errors %}
+                    {{ form.about(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.about.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.about(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {{ form.priority.label(class="form-label") }}
+                    {% if form.priority.errors %}
+                    {{ form.priority(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.priority.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.priority(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {{ form.bug_status.label(class="form-label") }}
+                    {% if form.bug_status.errors %}
+                    {{ form.bug_status(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.bug_status.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.bug_status(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {{ form.user_assigned.label(class="form-label") }}
+                    {% if form.user_assigned.errors %}
+                    {{ form.user_assigned(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.user_assigned.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.user_assigned(class="form-control") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+        {% endif %}
 
         <div class="mb-3">
             {{ form.submit(class="btn btn-outline-info") }}
