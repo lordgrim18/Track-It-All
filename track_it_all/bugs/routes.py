@@ -76,10 +76,10 @@ def delete_bug(bug_id):
     flash('Bug deleted!', category='success')
     return redirect(url_for('projects.get_project', project_id=bug.project))
 
-@bugs.route('/user/<string:first_name>')
+@bugs.route('/user/<string:user_id>')
 @login_required
-def user_bugs(first_name):
+def user_bugs(user_id):
     page = request.args.get('page', 1, type=int)
-    user = User.query.filter_by(first_name=first_name).first_or_404()
-    bugs = Bug.query.filter_by(bug_adder=user).order_by(Bug.date.desc()).paginate(page=page, per_page=5)
+    user = User.query.get_or_404(user_id)
+    bugs = user.bugs.order_by(Bug.created_at.desc()).paginate(page=page, per_page=5)
     return render_template('user_bugs.html', user=user, bugs=bugs)

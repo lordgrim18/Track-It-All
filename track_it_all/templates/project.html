@@ -68,6 +68,8 @@
         <ul>
           {% for bug in project.get_all_bugs() %}
           <li>
+            <small><a href="{{ url_for('bugs.user_bugs', user_id=user.id) }}">{{ bug.assigned_user.first_name }}</a></small>
+            <br>
             <a href="{{ url_for('bugs.get_bug', bug_id=bug.id) }}">{{ bug.title }}</a> - {{ bug.priority }}
             <div>
               <a class="btn btn-secondary btn-sm me-1" href="{{ url_for('bugs.update_bug', bug_id=bug.id) }}">Update Bug</a>
