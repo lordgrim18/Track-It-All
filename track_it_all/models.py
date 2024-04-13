@@ -80,6 +80,9 @@ class Project(db.Model):
             project_user.c.project_id == self.id
             ).all()
     
+    def get_all_bugs(self):
+        return Bug.query.filter_by(project=self.id).all()
+    
     def manager(self):
         return User.query.join(project_user, onclause=project_user.c.user_id == User.id).filter(
             project_user.c.project_id == self.id,
@@ -112,7 +115,7 @@ class Bug(db.Model):
     title = db.Column(db.String(150), nullable=False)
     about = db.Column(db.String(150), nullable=False)
     bug_status = db.Column(db.String(150), nullable=False)
-    deadline_date = db.Column(db.DateTime(timezone=True), nullable=False)
+    priority = db.Column(db.String(150), nullable=False)
     user_assigned = db.Column(db.String(36), db.ForeignKey('user.id', ondelete='SET NULL'), nullable=True)
     project = db.Column(db.String(36), db.ForeignKey('project.id', ondelete='CASCADE'), nullable=False)
     created_by = db.Column(db.String(36), db.ForeignKey('user.id', ondelete='SET NULL'), nullable=True)
