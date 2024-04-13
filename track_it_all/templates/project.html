@@ -37,7 +37,6 @@
                   Remove {{ member.first_name }}
                 </button>
               </div>
-          </ul>
                 
                 <!-- Confirmation Modal for Removing Member -->
                 <div class="modal fade" id="confirmRemoveModal{{ member.id }}" tabindex="-1" aria-labelledby="confirmRemoveModal{{ member.id }}Label" aria-hidden="true">
@@ -58,7 +57,8 @@
                 </div>
                 
               {% endif %}
-            {% endif %}
+          </ul>
+          {% endif %}
             {% endfor %}
         {% else %}
           <p class="article-content">This is an individual project</p>
@@ -71,12 +71,12 @@
           {% endfor %}
         </ul>
 
-        {% if project.manager() == user %}
         <br>
         <br>
         <br>
           <a class="btn btn-secondary btn-sm me-1" href="{{ url_for('bugs.add_bug', project_id=project.id) }}">Add Bug</a>
-          <a class="btn btn-secondary btn-sm" href="{{ url_for('projects.add_user_to_project', project_id=project.id) }}">Add User</a>
+        {% if project.manager() == user %}
+        <a class="btn btn-secondary btn-sm" href="{{ url_for('projects.add_user_to_project', project_id=project.id) }}">Add User</a>
         {% endif %}
       </div>
     </article>

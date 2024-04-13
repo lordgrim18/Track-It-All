@@ -29,20 +29,12 @@
   <h2>Bugs</h2>
   {% for bug in bugs.items %}
   <article class="media content-section">
-    <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + bug.bug_adder.image_file) }}">
     <div class="media-body">
       <div class="article-metadata">
-        <a class="mr-2" href="{{ url_for('bugs.user_bugs', first_name=bug.bug_adder.first_name) }}">{{ bug.bug_adder.first_name }}</a>
-        <small class="text-muted">{{ bug.date.strftime('%Y-%m-%d') }}</small>
-        {% if bug.bug_adder == user %}
-        <div>
-          <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('bugs.update_bug', bug_id=bug.id) }}">Update</a>
-          <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-        </div>
-        {% endif %}
+        <a class="mr-2" href="">{{ bug.created_by.first_name }}</a>
       </div>
       <h2 class="article-title"><a href="{{ url_for('bugs.get_bug', bug_id=bug.id) }}">{{ bug.title }}</a></h2>
-      <p class="article-content">{{ bug.desc }}</p>
+      <p class="article-content">{{ bug.about }}</p>
     </div>
   </article>
   {% endfor %}
