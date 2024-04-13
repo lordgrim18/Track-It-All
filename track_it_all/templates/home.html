@@ -31,7 +31,7 @@
   <article class="media content-section">
     <div class="media-body">
       <div class="article-metadata">
-        <a class="mr-2" href="">{{ bug.created_by.first_name }}</a>
+        <a class="mr-2" href="">{{ bug.user_assigned.first_name }}</a>
       </div>
       <h2 class="article-title"><a href="{{ url_for('bugs.get_bug', bug_id=bug.id) }}">{{ bug.title }}</a></h2>
       <p class="article-content">{{ bug.about }}</p>

@@ -21,7 +21,7 @@ def add_bug(project_id):
             bug_status=form.bug_status.data,
             priority=form.priority.data,
             user_assigned=form.user_assigned.data,
-            project=form.project_id,
+            project=project.id,
             created_by=str(current_user.id),
             updated_by=str(current_user.id)
             )
@@ -35,24 +35,33 @@ def add_bug(project_id):
 @login_required
 def get_bug(bug_id):
     bug = Bug.query.get_or_404(bug_id)
-    return render_template('bug.html', user=current_user, bug=bug)
+    user_assigned = User.query.get(bug.user_assigned) if bug.user_assigned else None
+    return render_template('bug.html', user=current_user, bug=bug, user_assigned=user_assigned)
 
 @bugs.route('bug/update/<string:bug_id>', methods=['GET', 'POST'])
 @login_required
 def update_bug(bug_id):
     bug = Bug.query.get_or_404(bug_id)
-    if bug.bug_adder != current_user:
+    if current_user not in Project.query.get(bug.project).get_all_users():
         abort(403)
-    form = BugForm()
+    method = request.form.get('_method')
+    form = BugForm(project_id=bug.project, request_method=method, creator_user=current_user)
     if form.validate_on_submit():
         bug.title = form.title.data
-        bug.desc = form.desc.data
+        bug.about = form.about.data
+        bug.bug_status = form.bug_status.data
+        bug.priority = form.priority.data
+        bug.user_assigned = form.user_assigned.data
+        bug.updated_by = str(current_user.id)
         db.session.commit()
         flash('Bug updated!', category='success')
         return redirect(url_for('bugs.get_bug', bug_id=bug.id))
     elif request.method == 'GET':
         form.title.data = bug.title
-        form.desc.data = bug.desc
+        form.about.data = bug.about
+        form.bug_status.data = bug.bug_status
+        form.priority.data = bug.priority
+        form.user_assigned.data = bug.user_assigned
         form.submit.label.text = 'Update'
     return render_template('add_bug.html', user=current_user, form=form, legend='Update Bug')
 

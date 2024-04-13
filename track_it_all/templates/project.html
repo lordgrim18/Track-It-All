@@ -57,9 +57,9 @@
                 </div>
                 
               {% endif %}
-          </ul>
           {% endif %}
-            {% endfor %}
+          </ul>
+          {% endfor %}
         {% else %}
           <p class="article-content">This is an individual project</p>
         {% endif %}
@@ -67,7 +67,8 @@
         <h2>Bugs</h2>
         <ul>
           {% for bug in project.get_all_bugs() %}
-            <li>{{ bug.title }} - {{ bug.priority }}</li>
+            <li><a href="{{ url_for('bugs.get_bug', bug_id=bug.id) }}">{{ bug.title }}</a> - {{ bug.priority }}</li>
+            <a class="btn btn-secondary btn-sm me-1" href="{{ url_for('bugs.update_bug', bug_id=bug.id) }}">Update Bug</a>
           {% endfor %}
         </ul>
 
