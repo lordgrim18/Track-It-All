@@ -14,3 +14,6 @@ venv/
 *.db
 instance/
 migrations/
+
+# testing
+.pytest_cache
