@@ -34,8 +34,6 @@ def test_client():
         db.create_all()
 
     client = flask_app.test_client()
+    with flask_app.test_request_context():
 
-    yield client  
-
-    with flask_app.app_context():
-        db.drop_all()
+        yield client  
