@@ -27,7 +27,6 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(255), nullable=False)
     first_name = db.Column(db.String(150), nullable=False)
     last_name = db.Column(db.String(150), nullable=False)
-    image_file = db.Column(db.String(60), nullable=False, default='default.jpg')
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
 
